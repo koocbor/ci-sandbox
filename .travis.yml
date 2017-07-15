@@ -3,4 +3,4 @@ language: objective-c
 osx_image: xcode8.3
 
 script:
-  - xcodebuild clean -project 'ios/ci sandbox/ci sandbox.xcodeproj' && xcodebuild build -sdk iphonesimulator10.0 -project 'ios/ci sandbox/ci sandbox.xcodeproj' -scheme 'ci sandboxTests' CODE_SIGNING_REQUIRED=NO
+  - xcodebuild clean -project 'ios/ci sandbox/ci sandbox.xcodeproj' && xcodebuild build -sdk iphonesimulator10.3 -project 'ios/ci sandbox/ci sandbox.xcodeproj' -scheme 'ci sandbox' CODE_SIGNING_REQUIRED=NO
