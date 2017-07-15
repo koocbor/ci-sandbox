@@ -1,0 +1,6 @@
+language: objective-c
+
+osx_image: xcode8.3
+xcode_project: 'ios/ci sandbox/ci sandbox.xcodeproj'
+xcode_scheme: 'ios/ci sandboxTests'
+xcode_sdk: iphonesimulator10.0
