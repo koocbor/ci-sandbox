@@ -1,8 +1,63 @@
 language: objective-c
+language: android
 
 osx_image: xcode8.3
 
+jdk:
+  - oraclejdk8
+
+android:
+  components:
+    # Note: tools appears twice - it is required to get the latest Android SDK Tools
+    - tools
+    - platform-tools
+    - tools
+
+    # Build Tools Version
+    - build-tools-26.0.0
+
+    # Compile SDK Version
+    - android-26
+
+    # Emulator for UI Espresso tests
+    - sys-img-armeabi-v7a-android-21
+
+  licenses:
+    - 'android-sdk-license-.+'
+
+before_cache:
+  - rm -f $HOME/android/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/android/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/android/.gradle/caches/
+    - $HOME/android/.gradle/wrapper/
+    - $HOME/android/.android/build-cache
+
+env:
+  global:
+    # install timeout in minutes (default is 2 minutes)
+    - ADB_INSTALL_TIMEOUT=8
+
+# Emulator Management: Create, Start and Wait
+before_script:
+  - if [[ $TRAVIS_BRANCH =~ android\/. ]]; then
+      echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+      emulator -avd test -no-skin -no-audio -no-window &
+      android-wait-for-emulator
+      adb shell input keyevent 82 &
+    fi
+
 script:
   - if [[ $TRAVIS_BRANCH =~ android\/. ]]; then
+      android list target;
+      ./android/gradlew -p android build connectedCheck;
+    fi
+  - if [[ $TRAVIS_BRANCH =~ ios\/. ]]; then
       xcodebuild clean -project 'ios/ci sandbox/ci sandbox.xcodeproj' && xcodebuild build -sdk iphonesimulator10.3 -project 'ios/ci sandbox/ci sandbox.xcodeproj' CODE_SIGNING_REQUIRED=NO;
     fi
+
+branches:
+  only:
+    - ios
+    - android
