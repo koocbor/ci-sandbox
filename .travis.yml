@@ -1,0 +1,8 @@
+language: objective-c
+
+osx_image: xcode8.3
+
+script:
+  - if [[ $TRAVIS_BRANCH =~ android\/. ]]; then
+      xcodebuild clean -project 'ios/ci sandbox/ci sandbox.xcodeproj' && xcodebuild build -sdk iphonesimulator10.3 -project 'ios/ci sandbox/ci sandbox.xcodeproj' CODE_SIGNING_REQUIRED=NO;
+    fi
